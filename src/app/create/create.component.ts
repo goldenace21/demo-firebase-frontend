@@ -17,7 +17,6 @@ import {Product} from "../class/product";
 export class CreateComponent implements OnInit {
   title = 'firebase';
   selectedFile: File = null;
-  fb;
   products :Product[];
   downloadURL: Observable<string>;
   productForm = new FormGroup({
@@ -29,29 +28,23 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.firebaseService.getAllProduct().subscribe(
-      value => this.products = value,
-      error => {},
-      () => {}
+      value => this.products = value
     );
   }
 
   onFileSelected(event) {
-    var n = Date.now();
     const file = event.target.files[0];
-    const filePath = `RoomsImages/${n}`;
+    const nameImg = this.getCurrentDateTime() + file;
+    const filePath = `product/${nameImg}`;
     const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(`RoomsImages/${n}`, file);
+    const task = this.storage.upload(`product/${nameImg}`, file);
     task.snapshotChanges().pipe(
       finalize(() => {
         this.downloadURL = fileRef.getDownloadURL();
         this.downloadURL.subscribe(url => {
-            this.fb = url;
           this.productForm.patchValue({img:url})
-          console.log(this.fb);
         });
-      })
-    )
-      .subscribe(url => {
+      })).subscribe(url => {
           console.log(url);
       });
   }
@@ -59,29 +52,8 @@ export class CreateComponent implements OnInit {
   getCurrentDateTime(): string {
     return formatDate(new Date(), 'dd-MM-yyyyhhmmssa', 'en-US');
   }
-  showPreview(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
 
   save() {
-    // const nameImg = this.getCurrentDateTime() + this.selectedFile.name;
-    // const fileRef = this.storage.ref(nameImg);
-    //
-    // this.storage.upload(nameImg, this.selectedFile).snapshotChanges().pipe(
-    //   finalize(() => {
-    //     fileRef.getDownloadURL().subscribe((url) => {
-    //
-    //       this.productForm.patchValue({img: url});
-    //
-    //       // Call API to create vaccine
-    //       this.firebaseService.create(this.productForm.value).subscribe(
-    //         value => {},
-    //         error => {},
-    //         () => this.ngOnInit(),
-    //       )
-    //     });
-    //   })
-    // ).subscribe();
     this.firebaseService.create(this.productForm.value).subscribe(
       value => {},
       error => {},
