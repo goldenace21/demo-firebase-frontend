@@ -1,0 +1,22 @@
+<div class="container mt-5">
+    <div class="col-6 mx-auto bg p-4 rounded">
+      <h5 class="text-center">Create product</h5>
+      <form [formGroup]="productForm">
+      <div class="mb-3 mt-4">
+        <label for="name" class="form-label">Product name:</label>
+        <input formControlName="name" class="form-control" type="text" id="name" placeholder="enter product name">
+      </div>
+      <div class="mb-3">
+        <label for="formFileMultiple" class="form-label">product image:</label>
+        <input formControlName="img" class="form-control" type="file" id="formFileMultiple" #userPhoto (change)="onFileSelected($event)" autocomplete="off">
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Product price:</label>
+        <input formControlName="price" class="form-control" type="text" id="price" placeholder="enter product price">
+      </div>
+      <div class="mx-auto mt-4 d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary mb-3 w-100 mx-auto" (click)="save()">create product</button>
+      </div>
+      </form>
+    </div>
+</div>
